@@ -1,25 +1,16 @@
 <p align="center">
-  <img src="assets/banners/hero.svg" alt="BIP39 SDK — Киберпанк × Ван Гог × Гауди" width="100%"/>
+  <img src="assets/banners/hero.svg" alt="BIP39 SDK" width="100%"/>
 </p>
 
 # BIP39-SDK-GROK
 
-**Готовый безопасный BIP39-онбординг для Android**  
-Ядро на Rust · Jetpack Compose · Tink · биометрия · 20 визуальных пресетов
+**SDK для создания профиля/аккаунта и корневых криптоключей приложения**
+
+Онбординг по BIP39 → одноразовая выдача seed/ключей хосту → дальше вся криптография приложения.
+
+Rust · Android Compose · iOS SwiftUI · Tink · биометрия · 20 тем
 
 [English](README.md) · [Русский](README.ru.md) · [Español](README.es.md)
-
----
-
-## Что внутри
-
-| Сценарий | Возможности |
-|----------|-------------|
-| **Создание** | 12/24 слова · дисклеймер · бумажный бэкап · квиз · PIN + panic PIN |
-| **Восстановление** | Вставка · QR · PDF |
-| **Вход** | PIN · опциональная passphrase · биометрия · session lock |
-| **Движок** | Сначала Rust, иначе JVM |
-| **Внешний вид** | 20 тем · заставка Welcome Aboard |
 
 ## Быстрый старт
 
@@ -30,24 +21,9 @@ OnboardingTheme(config = OnboardingThemePresets.config("neon_night")) {
 }
 ```
 
-## Темы
+## Для AI-агентов
 
-```kotlin
-OnboardingThemePresets.config("gaudi_mosaic") // или starry_amber, cyber_sakura, …
-```
-
-## Rust (по желанию)
-
-```bash
-./scripts/doctor.sh
-./scripts/build-rust-android.sh
-```
-
-Без `.so` SDK сам переключится на Kotlin.
-
-## Скрипты
-
-`doctor.sh` · `build-rust-android.sh` · `verify-parity.sh` · `run-sample.sh` · **`push-to-github.sh`**
+[docs/AGENT_GUIDE.md](docs/AGENT_GUIDE.md)
 
 ## Безопасность
 

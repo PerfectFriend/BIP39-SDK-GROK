@@ -1,11 +1,14 @@
 <p align="center">
-  <img src="assets/banners/hero.svg" alt="BIP39 SDK — Cyberpunk × Van Gogh × Gaudí" width="100%"/>
+  <img src="assets/banners/hero.svg" alt="BIP39 SDK — Account bootstrap and root keys" width="100%"/>
 </p>
 
 # BIP39-SDK-GROK
 
-**Drop-in secure BIP39 onboarding for Android**  
-Rust core · Jetpack Compose · Tink · Biometrics · 20 visual presets
+**SDK to bootstrap user accounts and supply root cryptographic keys for your app**
+
+Create or restore a profile from a BIP39 seed, then hand a one-shot key payload to the host — wallets, E2E encryption, identity, anything that needs a strong local root.
+
+Rust core · Android Compose · iOS SwiftUI · Tink · Biometrics · 20 themes
 
 [English](README.md) · [Русский](README.ru.md) · [Español](README.es.md)
 
@@ -24,9 +27,6 @@ Rust core · Jetpack Compose · Tink · Biometrics · 20 visual presets
 ## Quick start
 
 ```kotlin
-// settings.gradle.kts — JitPack or module
-// implementation("com.github.PerfectFriend:BIP39-SDK-GROK:TAG")
-
 class MainActivity : FragmentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -46,38 +46,40 @@ class MainActivity : FragmentActivity() {
 }
 ```
 
-## Theme presets (pick one)
+## Theme presets
 
 ```kotlin
-OnboardingThemePresets.ids()
-// neon_night, starry_amber, gaudi_mosaic, cyber_sakura, deep_ocean, ...
 OnboardingThemePresets.config("gaudi_mosaic")
+// neon_night, starry_amber, cyber_sakura, deep_ocean, ...
 ```
 
 ## Native Rust (optional)
 
 ```bash
 export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/<ver>
-./scripts/build-rust-android.sh   # → library/src/main/jniLibs
-./scripts/doctor.sh               # environment check
+./scripts/build-rust-android.sh
+./scripts/doctor.sh
 ```
-
-Without `.so`, the SDK uses the Kotlin BIP39 engine automatically.
 
 ## Scripts
 
 | Script | Purpose |
 |--------|---------|
-| `scripts/doctor.sh` | JDK / SDK / NDK / cargo / jniLibs check |
-| `scripts/build-rust-android.sh` | Build native libs for all ABIs |
-| `scripts/verify-parity.sh` | Golden vector check (Rust) |
-| `scripts/run-sample.sh` | Install debug sample |
-| `RUN_IN_B39.sh` | One-shot host test + optional NDK build |
-| `scripts/push-to-github.sh` | Create/push **BIP39-SDK-GROK** via `gh` |
+| `scripts/doctor.sh` | Environment check |
+| `scripts/build-rust-android.sh` | Native Android libs |
+| `scripts/build-rust-ios.sh` | iOS XCFramework |
+| `scripts/verify-parity.sh` | Golden vector (Rust) |
+| `scripts/run-sample.sh` | Install sample |
+| `scripts/push-to-github.sh` | Create/push via `gh` |
+
+## For coding agents
+
+Full integration playbook: **[docs/AGENT_GUIDE.md](docs/AGENT_GUIDE.md)**  
+Prompts: [docs/AI_PROMPTS.md](docs/AI_PROMPTS.md)
 
 ## Security
 
-- FLAG_SECURE on seed screens · CharArray mnemonics · Tink AEAD · panic PIN wipe  
+- FLAG_SECURE · CharArray mnemonics · Tink AEAD · panic PIN wipe  
 - See [docs/SECURITY.md](docs/SECURITY.md)
 
 ## License
