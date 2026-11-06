@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banners/repo-banner-embedded.svg" alt="BIP39 SDK" width="100%"/>
+  <img src="assets/banners/repo-banner.jpg" alt="BIP39 SDK — создание аккаунта и корневые ключи" width="100%"/>
 </p>
 
 # BIP39-SDK-GROK
@@ -8,15 +8,25 @@
 
 Онбординг по BIP39 → одноразовая выдача seed/ключей хосту → дальше вся криптография приложения.
 
+Rust · Android Compose · iOS SwiftUI · Tink · биометрия · 20 тем
+
 [English](README.md) · [Русский](README.ru.md) · [Español](README.es.md)
+
+---
 
 ## Быстрый старт
 
 ```kotlin
 MnemonicEngines.preferRust()
 OnboardingTheme(config = OnboardingThemePresets.config("neon_night")) {
-  OnboardingNavHost(storage, onComplete = { payload -> payload.clear() })
+  OnboardingNavHost(storage, onComplete = { payload -> /* ключи */; payload.clear() })
 }
+```
+
+## Темы
+
+```kotlin
+OnboardingThemePresets.config("gaudi_mosaic")
 ```
 
 ## Для AI-агентов

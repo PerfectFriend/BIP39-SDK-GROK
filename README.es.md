@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banners/repo-banner-embedded.svg" alt="BIP39 SDK" width="100%"/>
+  <img src="assets/banners/repo-banner.jpg" alt="BIP39 SDK — bootstrap de cuenta y claves raíz" width="100%"/>
 </p>
 
 # BIP39-SDK-GROK
@@ -8,15 +8,25 @@
 
 Onboarding BIP39 → entrega única de seed/claves al host → el resto de la criptografía de la app.
 
+Rust · Android Compose · iOS SwiftUI · Tink · biometría · 20 temas
+
 [English](README.md) · [Русский](README.ru.md) · [Español](README.es.md)
+
+---
 
 ## Inicio rápido
 
 ```kotlin
 MnemonicEngines.preferRust()
 OnboardingTheme(config = OnboardingThemePresets.config("neon_night")) {
-  OnboardingNavHost(storage, onComplete = { payload -> payload.clear() })
+  OnboardingNavHost(storage, onComplete = { payload -> /* claves */; payload.clear() })
 }
+```
+
+## Temas
+
+```kotlin
+OnboardingThemePresets.config("gaudi_mosaic")
 ```
 
 ## Para agentes de código
