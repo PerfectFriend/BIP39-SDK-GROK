@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banners/hero.svg" alt="BIP39 SDK — Account bootstrap and root keys" width="100%"/>
+  <img src="assets/banners/repo-banner-embedded.svg" alt="BIP39 SDK — Account bootstrap and root keys for your app" width="100%"/>
 </p>
 
 # BIP39-SDK-GROK
@@ -50,13 +50,11 @@ class MainActivity : FragmentActivity() {
 
 ```kotlin
 OnboardingThemePresets.config("gaudi_mosaic")
-// neon_night, starry_amber, cyber_sakura, deep_ocean, ...
 ```
 
 ## Native Rust (optional)
 
 ```bash
-export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/<ver>
 ./scripts/build-rust-android.sh
 ./scripts/doctor.sh
 ```
@@ -68,19 +66,15 @@ export ANDROID_NDK_HOME=$ANDROID_HOME/ndk/<ver>
 | `scripts/doctor.sh` | Environment check |
 | `scripts/build-rust-android.sh` | Native Android libs |
 | `scripts/build-rust-ios.sh` | iOS XCFramework |
-| `scripts/verify-parity.sh` | Golden vector (Rust) |
-| `scripts/run-sample.sh` | Install sample |
-| `scripts/push-to-github.sh` | Create/push via `gh` |
+| `scripts/push-to-github.sh` | Push via `gh` |
 
 ## For coding agents
 
-Full integration playbook: **[docs/AGENT_GUIDE.md](docs/AGENT_GUIDE.md)**  
-Prompts: [docs/AI_PROMPTS.md](docs/AI_PROMPTS.md)
+**[docs/AGENT_GUIDE.md](docs/AGENT_GUIDE.md)** · [docs/AI_PROMPTS.md](docs/AI_PROMPTS.md)
 
 ## Security
 
-- FLAG_SECURE · CharArray mnemonics · Tink AEAD · panic PIN wipe  
-- See [docs/SECURITY.md](docs/SECURITY.md)
+See [docs/SECURITY.md](docs/SECURITY.md)
 
 ## License
 
