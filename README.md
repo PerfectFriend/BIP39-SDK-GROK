@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banners/hero.svg" alt="BIP39 SDK — Account bootstrap and root keys for your app" width="100%"/>
+  <img src="assets/banners/repo-banner.jpg" alt="BIP39 SDK — Account bootstrap and root keys for your app" width="100%"/>
 </p>
 
 > **Raster banner:** add `assets/banners/repo-banner.jpg` from the release pack, then point this image tag to it.
