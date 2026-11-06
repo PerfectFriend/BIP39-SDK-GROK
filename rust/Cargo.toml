@@ -1,0 +1,12 @@
+[workspace]
+resolver = "2"
+members = [
+    "bip39-engine",
+    "bip39-engine-ffi",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/PerfectFriend/bip39-onboarding-android"

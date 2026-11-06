@@ -1,0 +1,19 @@
+[package]
+name = "bip39-engine-ffi"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "C ABI (+ optional JNI for Android) for bip39-engine"
+rust-version = "1.70"
+
+[lib]
+crate-type = ["cdylib", "staticlib", "lib"]
+name = "bip39_engine_ffi"
+
+[features]
+default = []
+android-jni = ["dep:jni"]
+
+[dependencies]
+bip39-engine = { path = "../bip39-engine" }
+jni = { version = "=0.21.1", default-features = false, optional = true }

@@ -1,0 +1,70 @@
+package com.example.bip39onboarding.data
+
+import com.example.bip39onboarding.security.Bip39Manager
+
+/**
+ * Result of a PIN unlock attempt.
+ */
+sealed class UnlockResult {
+    data class Success(val mnemonic: CharArray) : UnlockResult()
+    data object WrongPin : UnlockResult()
+    data object Panic : UnlockResult()
+    data object NotSetup : UnlockResult()
+    data object Error : UnlockResult()
+}
+
+/**
+ * Hand-off payload after onboarding / unlock.
+ * Caller MUST clear [mnemonic] and [passphrase] when done.
+ */
+data class SeedPayload(
+    val mnemonic: CharArray,
+    val fingerprint: String,
+    val wordCount: Int,
+    val passphrase: CharArray = charArrayOf(),
+    val hasPassphrase: Boolean = passphrase.isNotEmpty()
+) {
+    fun toSeedBytes(): ByteArray {
+        return Bip39Manager.toSeed(mnemonic, passphrase)
+    }
+
+    fun clear() {
+        Bip39Manager.clear(mnemonic)
+        Bip39Manager.clear(passphrase)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        other as SeedPayload
+        return mnemonic.contentEquals(other.mnemonic) &&
+            fingerprint == other.fingerprint &&
+            wordCount == other.wordCount &&
+            passphrase.contentEquals(other.passphrase)
+    }
+
+    override fun hashCode(): Int {
+        var result = mnemonic.contentHashCode()
+        result = 31 * result + fingerprint.hashCode()
+        result = 31 * result + wordCount
+        result = 31 * result + passphrase.contentHashCode()
+        return result
+    }
+}
+
+enum class OnboardingStep {
+    SPLASH,
+    CHOOSE,
+    STRENGTH,
+    DISCLAIMER,
+    SHOW_MNEMONIC,
+    VERIFY,
+    SET_PASSPHRASE,
+    SET_PIN,
+    SET_PANIC_PIN,
+    RESTORE_CHOOSE,
+    RESTORE_PASTE,
+    RESTORE_QR,
+    RESTORE_PDF,
+    DONE
+}

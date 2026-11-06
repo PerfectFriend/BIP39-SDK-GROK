@@ -1,0 +1,6 @@
+namespace bip39_engine {
+  string generate_mnemonic(u8 word_count);
+  boolean validate_mnemonic(string phrase);
+  sequence<u8> mnemonic_to_seed(string phrase, string passphrase);
+  string fingerprint_seed_prefix(string phrase);
+};

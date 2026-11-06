@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bip39_app_name">Secure Key</string>
+    <string name="bip39_splash_subtitle">Безопасный онбординг по стандарту BIP39</string>
+    <string name="bip39_start">Начать</string>
+    <string name="bip39_choose_title">Создать или восстановить?</string>
+    <string name="bip39_create_account">Создать новый аккаунт</string>
+    <string name="bip39_restore_account">Восстановить по seed-фразе</string>
+    <string name="bip39_strength_title">Длина seed-фразы</string>
+    <string name="bip39_words_12">12 слов (рекомендуется)</string>
+    <string name="bip39_words_24">24 слова</string>
+    <string name="bip39_disclaimer_title">Важная информация</string>
+    <string name="bip39_disclaimer_body">Вы несёте полную персональную ответственность за сохранность seed-фразы.\n\n• Потеря фразы = безвозвратная потеря доступа\n• Никто, включая разработчиков, не сможет помочь\n• Не храните в облаке, мессенджерах, email\n• Не фотографируйте и не делайте скриншоты</string>
+    <string name="bip39_disclaimer_checkbox">Я понимаю риски и беру ответственность на себя</string>
+    <string name="bip39_continue">Продолжить</string>
+    <string name="bip39_write_down_title">Запишите seed-фразу</string>
+    <string name="bip39_screenshots_blocked">Скриншоты запрещены. Храните только offline.</string>
+    <string name="bip39_show">Показать</string>
+    <string name="bip39_hide">Скрыть</string>
+    <string name="bip39_copy_all">Скопировать всё</string>
+    <string name="bip39_copied_toast">Скопировано. Не вставляйте в мессенджеры. Буфер будет очищен.</string>
+    <string name="bip39_export_pdf">Экспорт PDF + QR (рекомендуется)</string>
+    <string name="bip39_i_wrote_it">Я записал(а) фразу</string>
+    <string name="bip39_verify_title">Проверка seed-фразы</string>
+    <string name="bip39_verify_subtitle">Выберите правильные слова</string>
+    <string name="bip39_check">Проверить</string>
+    <string name="bip39_set_pin_title">Придумайте PIN</string>
+    <string name="bip39_set_pin_subtitle">Этот PIN будет использоваться для входа</string>
+    <string name="bip39_set_panic_title">Panic PIN (пинкод принуждения)</string>
+    <string name="bip39_set_panic_subtitle">При вводе этого PIN все данные будут безвозвратно удалены. Используйте, если вас заставляют разблокировать приложение.</string>
+    <string name="bip39_pin_label">PIN</string>
+    <string name="bip39_pin_confirm">Подтвердите PIN</string>
+    <string name="bip39_pin_min">Минимум 6 цифр</string>
+    <string name="bip39_pin_mismatch">PIN не совпадает</string>
+    <string name="bip39_pin_weak">PIN слишком простой</string>
+    <string name="bip39_pin_same_as_panic">Panic PIN должен отличаться от обычного PIN</string>
+    <string name="bip39_restore_choose_title">Как восстановить?</string>
+    <string name="bip39_restore_paste">Вставить seed-фразу</string>
+    <string name="bip39_restore_qr">Сканировать QR-код</string>
+    <string name="bip39_restore_pdf">Импорт PDF-паспорта</string>
+    <string name="bip39_restore_paste_title">Вставьте seed-фразу</string>
+    <string name="bip39_restore_invalid">Неверная seed-фраза или ошибка checksum</string>
+    <string name="bip39_back">Назад</string>
+    <string name="bip39_unlock_title">Введите PIN</string>
+    <string name="bip39_unlock">Разблокировать</string>
+    <string name="bip39_wrong_pin">Неверный PIN</string>
+    <string name="bip39_locked_out">Слишком много попыток. Повторите через %1$d с</string>
+    <string name="bip39_step_progress">Шаг %1$d из %2$d</string>
+    <string name="bip39_fingerprint">Fingerprint: %1$s</string>
+    <string name="bip39_qr_permission">Нужен доступ к камере для сканирования QR</string>
+    <string name="bip39_qr_hint">Наведите камеру на QR-код из резервной копии</string>
+    <string name="bip39_pdf_pick">Выбрать PDF-файл</string>
+    <string name="bip39_pdf_fail">Не удалось прочитать seed из PDF</string>
+
+    <string name="bip39_passphrase_title">Опциональная passphrase</string>
+    <string name="bip39_passphrase_body">Дополнительная BIP39 passphrase (25-е слово). Оставьте пустым, чтобы пропустить. Если зададите — она нужна для вывода ключей; потеря = потеря средств.</string>
+    <string name="bip39_passphrase_label">Passphrase</string>
+    <string name="bip39_passphrase_confirm">Подтвердите passphrase</string>
+    <string name="bip39_passphrase_skip">Пропустить (без passphrase)</string>
+    <string name="bip39_passphrase_active_hint">Кошелёк использует дополнительную passphrase</string>
+    <string name="bip39_biometric_title">Вход по биометрии</string>
+    <string name="bip39_biometric_subtitle">Подтвердите личность, затем введите PIN</string>
+    <string name="bip39_biometric_button">Биометрия</string>
+    <string name="bip39_biometric_enter_pin">Биометрия OK — введите PIN</string>
+    <string name="bip39_integrity_warning">Устройство может быть rooted, эмулятором или debug-сборкой. Будьте осторожны с seed.</string>
+
+
+    <string name="bip39_welcome_aboard_title">Добро пожаловать на борт</string>
+    <string name="bip39_welcome_aboard_subtitle">Безопасный онбординг BIP39 для ключей, которыми владеете только вы.</string>
+    <string name="bip39_welcome_aboard_tagline">Энтропия · Кастоди · Свобода</string>
+    <string name="bip39_welcome_aboard_footer">Вы отвечаете за seed-фразу. Мы не сможем её восстановить.</string>
+
+
+    <string name="bip39_paper_first_hint">Лучшая практика: сначала запишите слова на бумагу или металл. Цифровой экспорт — опционально и рискованнее.</string>
+    <string name="bip39_advanced_backup">Расширенный цифровой бэкап…</string>
+    <string name="bip39_pdf_advanced_warning">PDF и QR можно скопировать, сфотографировать или синхронизировать в облако. Предпочитайте offline бумагу/металл.</string>
+    <string name="bip39_unlock_passphrase_title">Введите passphrase кошелька</string>
+
+
+    <string name="bip39_keystore_weak_warning">Аппаратный Keystore не обнаружен. На этом устройстве шифрование seed опирается на software-ключи.</string>
+    <string name="bip39_screen_capture_warning">Обнаружен захват экрана. Скройте seed-фразу и перейдите в безопасное место.</string>
+
+    <string name="bip39_strength_hint">12 слов достаточно для большинства. 24 — для повышенной энтропии.</string>
+</resources>
