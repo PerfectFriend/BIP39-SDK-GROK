@@ -3,7 +3,7 @@ name = "bip39-engine"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
-description = "Portable BIP39 core for the bip39-onboarding engine (Phase C)"
+description = "Portable BIP39 + Argon2id KDF core for bip39-onboarding vault"
 rust-version = "1.70"
 
 [dependencies]
@@ -11,6 +11,14 @@ bip39 = { version = "=2.0.0", default-features = true }
 rand = "=0.8.5"
 sha2 = "=0.10.8"
 thiserror = "=1.0.63"
+argon2 = { version = "=0.5.2", default-features = false }
+base64ct = { version = "=1.6.0", default-features = false }
+blake2 = { version = "=0.10.6", default-features = false }
+hkdf = "=0.12.4"
+hmac = "=0.12.1"
+subtle = "=2.5.0"
+# rustc 1.75: avoid edition2024 crates
+proc-macro2 = { version = "=1.0.86", default-features = false }
 
 [dev-dependencies]
 hex = "=0.4.3"

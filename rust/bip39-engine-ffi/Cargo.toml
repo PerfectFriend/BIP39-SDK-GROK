@@ -12,8 +12,9 @@ name = "bip39_engine_ffi"
 
 [features]
 default = []
-android-jni = ["dep:jni"]
+android-jni = ["dep:jni", "dep:jni-sys"]
 
 [dependencies]
 bip39-engine = { path = "../bip39-engine" }
 jni = { version = "=0.21.1", default-features = false, optional = true }
+jni-sys = { version = "=0.3.0", optional = true }
