@@ -15,6 +15,6 @@ dependencyResolutionManagement {
     }
 }
 
-
 include(":library")
+include(":keyboard")
 include(":sample")
