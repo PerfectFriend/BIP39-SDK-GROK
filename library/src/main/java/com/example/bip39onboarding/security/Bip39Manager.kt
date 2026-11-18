@@ -1,6 +1,7 @@
 package com.example.bip39onboarding.security
 
 import com.example.bip39onboarding.engine.JvmBip39Core
+import com.example.bip39onboarding.engine.WordListValidator
 import com.example.bip39onboarding.engine.MnemonicEngine
 import com.example.bip39onboarding.engine.MnemonicEngines
 
@@ -29,6 +30,16 @@ object Bip39Manager {
             WORDS_12 -> MnemonicEngine.Strength.WORDS_12
             WORDS_24 -> MnemonicEngine.Strength.WORDS_24
         }
+
+        companion object {
+            fun fromWordCount(n: Int): Strength? = when (n) {
+                12, 15, 18 -> WORDS_12
+                21, 24 -> WORDS_24
+                else -> null
+            }
+
+            fun isValidWordCount(n: Int): Boolean = n in setOf(12, 15, 18, 21, 24)
+        }
     }
 
     private fun engine(): MnemonicEngine {
@@ -36,10 +47,6 @@ object Bip39Manager {
         return MnemonicEngines.current
     }
 
-    /**
-     * Generates a mnemonic of the given strength.
-     * @return CharArray (caller must [clear])
-     */
     fun generate(strength: Strength = Strength.WORDS_12): CharArray {
         return engine().generate(strength.toEngine())
     }
@@ -48,21 +55,32 @@ object Bip39Manager {
 
     fun validate(mnemonic: String): Boolean = validate(mnemonic.toCharArray())
 
-    /** BIP39 seed (64 bytes). */
+    fun validateDetailed(input: String, languageCode: String = "en"): WordListValidator.Result =
+        WordListValidator.validate(input, languageCode)
+
+    fun validateDetailed(input: CharArray, languageCode: String = "en"): WordListValidator.Result =
+        WordListValidator.validate(input, languageCode)
+
+    fun suggestWords(prefix: String, limit: Int = 5): List<String> =
+        WordListValidator.suggest(prefix, limit = limit)
+
     fun toSeed(mnemonic: CharArray, passphrase: CharArray = charArrayOf()): ByteArray {
         return engine().toSeed(mnemonic, passphrase)
     }
 
-    /** First 8 bytes of seed as hex (UI fingerprint). */
     fun fingerprint(mnemonic: CharArray): String = engine().fingerprint(mnemonic)
 
-    /** 3 random positions for the verification quiz (JVM). */
     fun pickRandomPositions(wordCount: Int): List<Int> =
         JvmBip39Core.pickRandomPositions(wordCount)
 
-    /** 5 answer options for quiz (JVM wordlist). */
     fun generateOptions(correctWord: String, languageCode: String = "en"): List<String> =
         JvmBip39Core.generateOptions(correctWord, languageCode)
+
+    fun mnemonicToEntropy(mnemonic: CharArray): ByteArray =
+        JvmBip39Core.mnemonicToEntropy(mnemonic)
+
+    fun entropyToMnemonic(entropy: ByteArray): CharArray =
+        JvmBip39Core.entropyToMnemonic(entropy)
 
     fun clear(data: CharArray?) {
         engine().clear(data)
@@ -72,7 +90,6 @@ object Bip39Manager {
         engine().clear(data)
     }
 
-    /** Which backend is active after init. */
     fun activeBackend(): MnemonicEngines.Backend {
         MnemonicEngines.ensureInitialized()
         return MnemonicEngines.backend
