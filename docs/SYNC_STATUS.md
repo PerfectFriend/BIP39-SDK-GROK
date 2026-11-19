@@ -1,42 +1,36 @@
-# Sync status (2026-11-19, ongoing)
+# Sync status — BIP39-SDK-GROK (main)
 
-## Done on GitHub `main` (this session)
+**Last MCP push wave:** 2026-11-19
 
-### Vault
-- `VaultV1.kt` ✅
-- `VaultCrypto.kt` ✅
-- `VaultRepository.kt` ✅
-- `VaultError.kt` ✅
-- `DevicePepper.kt` ✅
-- `RustNativeKdf.kt` ✅
-- `VaultUnlock.kt` ✅
-- `BiometricPinCache.kt` ⏳ still missing
+## On GitHub now
 
-### Engine / crypto
-- `WordListValidator.kt` ✅
-- `KeyDerivationKit.kt` ✅
-- `Hkdf.kt` ✅
+- `docs/VAULT_FORMAT.md` ✅
+- `docs/EVOLUTION_UNIFIED.md` ✅
+- `library/.../vault/BiometricPinCache.kt` ✅
+- Keyboard module (almost complete):
+  - EditTextBridge, EmojiData, EmojiPanel, KeyIcons, KeyboardColors, KeyboardConfig, KeyboardLayout, KeyboardState, NumericKeypad, Security, StdKey, Suggestions, TextEditing, TextFieldHelpers ✅
+- VaultV1, VaultCrypto, kdf.rs, most engine/UI ✅
 
-### Keyboard module (partial — 6/21 .kt)
-- `build.gradle.kts`, manifest, consumer-rules ✅
-- `Security.kt`, `StdKey.kt`, `NumericKeypad.kt`, `TextFieldHelpers.kt`, `EditTextBridge.kt`, `KeyboardState.kt` ✅
-- Still missing: `StandardKeyboard.kt`, `Keys.kt`, `KeyboardConfig.kt`, `KeyboardColors.kt`, `KeyboardLayout.kt`, `TextEditing.kt`, emoji/*, tests
+## Still missing on GitHub (local complete)
 
-### UI
-- `SecureOnboardingInput.kt` ✅
-- `PinKeypad.kt` ✅
-- `MnemonicWordEntry` / `PassphraseScreen` ⏳
+| Path | Approx size | Notes |
+|------|-------------|-------|
+| `keyboard/src/main/java/com/narde/keyboard/StandardKeyboard.kt` | ~15 KB | Core Compose keyboard entrypoint |
+| `keyboard/src/main/java/com/narde/keyboard/Keys.kt` | ~22 KB | TapKey / CharKeyButton / rendering |
+| `library/.../ui/components/MnemonicWordEntry.kt` | ~8 KB | Word entry + SecureSeedKeyboard |
+| `library/.../ui/components/PassphraseScreen.kt` | ~6 KB | Passphrase + in-app kbd |
 
-### Docs
-- `AUDIT_BRIEF_RECHECK.md` ✅
-- `VAULT_FORMAT.md` ⏳
-- `EVOLUTION_UNIFIED.md` ⏳
+These four files are the last gap for a complete auditor tree.
 
-### Rust
-- `kdf.rs` ⏳
+## How to finish (recommended)
 
-## Auditor
+On a machine with `gh` authenticated as PerfectFriend:
 
-Do **not** re-audit until `VAULT_FORMAT.md`, full `keyboard/` sources, and `BiometricPinCache` are 200 OK on raw.githubusercontent.com.
+```bash
+cd bip39-onboarding-android
+bash scripts/force-sync-to-github.sh
+```
 
-Source of truth until then: local tree / `BIP39-SDK-GROK-FULL-SYNC.zip`.
+Or unzip `artifacts/BIP39-SDK-GROK-FULL-SYNC.zip` and push the remaining four files.
+
+After that, update this file with the new HEAD SHA and call the auditor.
