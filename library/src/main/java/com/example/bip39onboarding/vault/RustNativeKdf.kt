@@ -11,7 +11,6 @@ object RustNativeKdf {
     val isAvailable: Boolean
         get() = RustMnemonicEngine.tryLoadNative()
 
-    /** Default production params — matches VAULT_FORMAT / bip39_engine::kdf */
     const val DEFAULT_M_KIB = 32_768
     const val DEFAULT_T = 3
     const val DEFAULT_P = 1
