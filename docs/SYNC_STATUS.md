@@ -1,62 +1,42 @@
-# Sync status (2026-11-19)
+# Sync status (2026-11-19, ongoing)
 
-## Problem
+## Done on GitHub `main` (this session)
 
-U0–U2 was developed in the agent sandbox. Only **partial** files were pushed to GitHub via API (size limits). The auditor correctly saw a broken/incomplete tree.
+### Vault
+- `VaultV1.kt` ✅
+- `VaultCrypto.kt` ✅
+- `VaultRepository.kt` ✅
+- `VaultError.kt` ✅
+- `DevicePepper.kt` ✅
+- `RustNativeKdf.kt` ✅
+- `VaultUnlock.kt` ✅
+- `BiometricPinCache.kt` ⏳ still missing
 
-## What is on GitHub now (partial)
+### Engine / crypto
+- `WordListValidator.kt` ✅
+- `KeyDerivationKit.kt` ✅
+- `Hkdf.kt` ✅
 
-Present after incremental sync commits:
+### Keyboard module (partial — 6/21 .kt)
+- `build.gradle.kts`, manifest, consumer-rules ✅
+- `Security.kt`, `StdKey.kt`, `NumericKeypad.kt`, `TextFieldHelpers.kt`, `EditTextBridge.kt`, `KeyboardState.kt` ✅
+- Still missing: `StandardKeyboard.kt`, `Keys.kt`, `KeyboardConfig.kt`, `KeyboardColors.kt`, `KeyboardLayout.kt`, `TextEditing.kt`, emoji/*, tests
 
-- `WordListValidator.kt`, `KeyDerivationKit.kt`, `Hkdf.kt`
-- `VaultRepository.kt`, `VaultError.kt` (via earlier commits), `RustNativeKdf.kt`
-- `SecureOnboardingInput.kt`, `Bip39Features`, bridges
-- `docs/AUDIT_BRIEF_RECHECK.md`
+### UI
+- `SecureOnboardingInput.kt` ✅
+- `PinKeypad.kt` ✅
+- `MnemonicWordEntry` / `PassphraseScreen` ⏳
 
-**Still may be missing on GitHub** (use local zip / force-sync):
+### Docs
+- `AUDIT_BRIEF_RECHECK.md` ✅
+- `VAULT_FORMAT.md` ⏳
+- `EVOLUTION_UNIFIED.md` ⏳
 
-- `VaultV1.kt`, `VaultCrypto.kt`
-- Full `:keyboard` module sources
-- `docs/VAULT_FORMAT.md`, `docs/EVOLUTION_UNIFIED.md`
-- `rust/.../kdf.rs` and related
+### Rust
+- `kdf.rs` ⏳
 
-## Source of truth
+## Auditor
 
-Local / package:
+Do **not** re-audit until `VAULT_FORMAT.md`, full `keyboard/` sources, and `BiometricPinCache` are 200 OK on raw.githubusercontent.com.
 
-- `BIP39-SDK-GROK-FULL-SYNC.zip` (artifacts)
-- Tree: `bip39-onboarding-android/`
-
-## Full force-sync (required before re-audit)
-
-On a machine with `gh` + `git` authenticated as PerfectFriend:
-
-```bash
-unzip BIP39-SDK-GROK-FULL-SYNC.zip
-cd bip39-onboarding-android
-bash scripts/force-sync-to-github.sh
-```
-
-Or manually:
-
-```bash
-gh repo clone PerfectFriend/BIP39-SDK-GROK
-cd BIP39-SDK-GROK
-# replace tree with zip contents (keep .git)
-git add -A
-git commit -m "sync: full local U0-U2 tree"
-git push origin main
-```
-
-Record the resulting commit SHA and give **that** to the auditor with `docs/AUDIT_BRIEF_RECHECK.md`.
-
-## Do not re-audit until
-
-```bash
-curl -sI https://raw.githubusercontent.com/PerfectFriend/BIP39-SDK-GROK/main/library/src/main/java/com/example/bip39onboarding/vault/VaultV1.kt | head -1
-# expect HTTP/2 200
-curl -sI https://raw.githubusercontent.com/PerfectFriend/BIP39-SDK-GROK/main/keyboard/build.gradle.kts | head -1
-# expect 200
-curl -sI https://raw.githubusercontent.com/PerfectFriend/BIP39-SDK-GROK/main/docs/VAULT_FORMAT.md | head -1
-# expect 200
-```
+Source of truth until then: local tree / `BIP39-SDK-GROK-FULL-SYNC.zip`.
