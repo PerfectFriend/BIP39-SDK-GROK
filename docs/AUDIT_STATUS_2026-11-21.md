@@ -15,7 +15,7 @@ The audit is largely correct for the **archive it read**. This tree has already 
 | B1 | `library` missing `:keyboard` | **Fixed** — `api(project(":keyboard"))` in `library/build.gradle.kts` |
 | B2 | Vault not wired to ViewModel / unlock | **Fixed** — `OnboardingViewModel.completeSetup` → `VaultRepository.create`; `OnboardingNavHost` injects `VaultRepository`; `PinUnlockScreen` → `VaultUnlock` |
 | B3 | No JNI for KDF | **Fixed in tree** — `jni_bridge.rs` exports KDF natives; `RustNativeKdf.kt` binds them. **CI must still ship `.so`** |
-| B4 | No vault tests | **Partial** — `VaultV1Test` (round-trip, wrong PIN, panic, 15/21-word). Spec resource dir optional |
+| B4 | No vault tests | **Partial** — `VaultV1Test` (round-trip, wrong PIN, panic, 15/21-word, wrong passphrase). Spec resource dir optional |
 | B5 | SYNC_STATUS overclaims Done | **Open** — this file is the source of truth |
 
 ## P0 map (product decisions applied)
@@ -27,8 +27,8 @@ The audit is largely correct for the **archive it read**. This tree has already 
 | P0-3 | Biometrics | **Disabled** — PIN-only product policy |
 | P0-4 | Backup / KeyLost | `noBackupFilesDir`; hmac never auto-creates key |
 | P0-5 | CharArray / String | Residual JVM risk; keyboard reduces IME leak |
-| P0-6 | Fingerprint | Prefer HMAC domain fingerprint |
-| P0-7 | Passphrase check | Per `VAULT_FORMAT.md` — verify always on |
+| P0-6 | Fingerprint | HMAC domain `bip39-sdk/fingerprint/v1` (not seed prefix) |
+| P0-7 | Passphrase check | `pp-check` HMAC in vault body; WrongPassphrase on mismatch |
 
 ## Fixes 2026-11-21
 
@@ -38,10 +38,17 @@ The audit is largely correct for the **archive it read**. This tree has already 
 4. VaultV1Test: 15/21-word entropy body
 5. Biometrics / QR / PDF defaults off (prior)
 
+## Session 2026-11-21b
+
+- Payload delivery: `deliverComplete` no longer clears after dual notify; `onComplete` owns lifecycle.
+- PinUnlock: localized `WrongPassphrase` / vault unavailable strings (EN+RU).
+- `SessionLock.sessionLockTouch` modifier; sample root uses it for idle touch (P1-14).
+- VaultV1Test: `wrongPassphrase_fails` (empty + wrong vs correct).
+- ClipboardHelper already sets IS_SENSITIVE (API 33+); SecureWindowController refcount already present.
+
 ## Still before 1.0 secure
 
 1. CI native `.so` + self-test
-2. Passphrase pp-check UX
-3. Residual P1 (payload, SecureWindow, clipboard)
-4. External audit (Колян)
-5. Rename when ready
+2. Residual P1 polish
+3. External audit (Колян)
+4. Rename when ready

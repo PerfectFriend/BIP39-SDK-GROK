@@ -8,6 +8,10 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.delay
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.awaitPointerEvent
+import androidx.compose.foundation.gestures.awaitPointerEventScope
 
 /**
  * In-memory session policy for hosts after successful unlock.
@@ -89,4 +93,53 @@ fun RememberSessionLockEffect(
             }
         }
     }
+}
+
+/**
+ * Call [SessionLock.touch] on any pointer event so idle timeout does not fire during use (P1-14).
+ */
+@Composable
+fun SessionLockEffect(
+    sessionLock: SessionLock,
+    onLock: () -> Unit
+) {
+    val owner = LocalLifecycleOwner.current
+    DisposableEffect(owner, sessionLock) {
+        val obs = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_STOP -> sessionLock.onBackground()
+                Lifecycle.Event.ON_START -> {
+                    if (sessionLock.onForeground()) onLock()
+                }
+                else -> Unit
+            }
+        }
+        owner.lifecycle.addObserver(obs)
+        onDispose { owner.lifecycle.removeObserver(obs) }
+    }
+    LaunchedEffect(sessionLock) {
+        while (true) {
+            delay(5_000)
+            if (sessionLock.shouldLockForeground()) {
+                onLock()
+                break
+            }
+        }
+    }
+}
+
+/**
+ * Attach to root content so any pointer interaction refreshes idle timeout (P1-14).
+ */
+fun Modifier.sessionLockTouch(session: SessionLock): Modifier {
+    return this.then(
+        Modifier.pointerInput(session) {
+            awaitPointerEventScope {
+                while (true) {
+                    awaitPointerEvent()
+                    session.touch()
+                }
+            }
+        }
+    )
 }
