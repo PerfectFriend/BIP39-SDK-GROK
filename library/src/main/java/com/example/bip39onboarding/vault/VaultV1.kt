@@ -209,13 +209,16 @@ object VaultV1 {
         val bb = ByteBuffer.wrap(bodyPlain).order(ByteOrder.BIG_ENDIAN)
         val first = bb.get().toInt() and 0xFF
 
+        // New layout (VAULT_FORMAT): entropy_len ∈ {16,20,24,28,32} for 12/15/18/21/24 words
+        // Legacy layout: word_count ∈ {12,15,18,21,24} then has_pp flag
         val mnemonic: CharArray
         val wordCount: Int
         val ppCheck: ByteArray
         val fp: ByteArray
         var hasPpFlag: Boolean
 
-        if (first == 16 || first == 32) {
+        val isEntropyBody = first in setOf(16, 20, 24, 28, 32)
+        if (isEntropyBody) {
             val entropy = ByteArray(first).also { bb.get(it) }
             wordCount = bb.get().toInt() and 0xFF
             ppCheck = ByteArray(4).also { bb.get(it) }
@@ -227,6 +230,7 @@ object VaultV1 {
             }
             hasPpFlag = hasPassphraseFlag
         } else {
+            // Legacy UTF-8 mnemonic body
             wordCount = first
             hasPpFlag = bb.get().toInt() and 0xFF == 1
             val mnemonicLen = bodyPlain.size - 2 - 4 - 4 - 8
