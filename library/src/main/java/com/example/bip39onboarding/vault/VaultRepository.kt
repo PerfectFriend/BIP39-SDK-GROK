@@ -1,6 +1,8 @@
 package com.example.bip39onboarding.vault
 
 import android.content.Context
+import com.example.bip39onboarding.security.Bip39Manager
+import com.example.bip39onboarding.security.CryptoUtils
 import com.example.bip39onboarding.security.SeedStorage
 import java.io.File
 
@@ -18,6 +20,7 @@ class VaultRepository(private val context: Context) {
     fun wipe() {
         try {
             if (file.exists()) {
+                // best-effort overwrite
                 val n = file.length().toInt().coerceAtMost(2_000_000)
                 if (n > 0) file.writeBytes(ByteArray(n))
                 file.delete()
@@ -36,6 +39,9 @@ class VaultRepository(private val context: Context) {
         passphrase: CharArray,
         wordCount: Int
     ) {
+        if (!DevicePepper.ensureKey(context)) {
+            throw VaultError.Other("keystore pepper unavailable")
+        }
         val pepper = DevicePepper.hmac(context, ByteArray(16) { it.toByte() })
             ?: throw VaultError.Other("keystore pepper unavailable")
         try {
@@ -49,8 +55,15 @@ class VaultRepository(private val context: Context) {
                     wordCount = wordCount
                 )
             )
+            // Atomic replace: write temp in same dir, then rename
             file.parentFile?.mkdirs()
-            file.writeBytes(blob)
+            val tmp = File(file.parentFile, FILE_NAME + ".tmp")
+            tmp.writeBytes(blob)
+            if (!tmp.renameTo(file)) {
+                // fallback if rename fails across FS boundaries
+                file.writeBytes(blob)
+                tmp.delete()
+            }
             blob.fill(0)
         } finally {
             pepper.fill(0)
@@ -78,6 +91,9 @@ class VaultRepository(private val context: Context) {
         }
     }
 
+    /**
+     * After legacy PIN unlock succeeds, rewrite as vault v1 and wipe legacy storage.
+     */
     fun migrateFromLegacy(
         mnemonic: CharArray,
         pin: CharArray,
