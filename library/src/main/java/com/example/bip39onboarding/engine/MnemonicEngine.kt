@@ -1,5 +1,7 @@
 package com.example.bip39onboarding.engine
 
+import com.example.bip39onboarding.vault.RustNativeKdf
+
 /**
  * Portable mnemonic crypto surface.
  *
@@ -133,15 +135,44 @@ object MnemonicEngines {
     @JvmStatic
     fun preferRust(): Boolean {
         val rust = RustMnemonicEngine.createOrNull()
-        return if (rust != null) {
-            current = rust
+        // Golden BIP39 vector required. KDF self-test is best-effort: if native
+        // loaded but Argon2id symbols missing, still use Rust for mnemonic ops.
+        val goldenOk = rust != null && selfTestGolden(rust)
+        return if (goldenOk) {
+            try {
+                RustNativeKdf.selfTest()
+            } catch (_: Throwable) {
+                // ignore — vault can use PBKDF2 path
+            }
+            current = rust!!
             backend = Backend.RUST
             initialized = true
             true
         } else {
+            // Broken/missing .so → JVM (audit P1-10)
             current = KotlinMnemonicEngine()
             backend = Backend.KOTLIN
             initialized = true
+            false
+        }
+    }
+
+    /**
+     * Golden vector: 12× abandon + about → seed prefix 5eb00bbd…
+     * Returns false on any exception / mismatch so caller can fall back to JVM.
+     */
+    private fun selfTestGolden(engine: MnemonicEngine): Boolean {
+        return try {
+            val m =
+                "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+                    .toCharArray()
+            if (!engine.validate(m)) return false
+            val seed = engine.toSeed(m, charArrayOf())
+            val head = seed.take(4).joinToString("") { "%02x".format(it) }
+            seed.fill(0)
+            engine.clear(m)
+            head == "5eb00bbd"
+        } catch (_: Throwable) {
             false
         }
     }
