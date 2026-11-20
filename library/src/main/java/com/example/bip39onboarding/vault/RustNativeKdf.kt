@@ -11,6 +11,7 @@ object RustNativeKdf {
     val isAvailable: Boolean
         get() = RustMnemonicEngine.tryLoadNative()
 
+    /** Default production params — matches VAULT_FORMAT / bip39_engine::kdf */
     const val DEFAULT_M_KIB = 32_768
     const val DEFAULT_T = 3
     const val DEFAULT_P = 1
@@ -85,5 +86,31 @@ object RustNativeKdf {
     fun panicMac(panicKey: ByteArray, salt: ByteArray): ByteArray? {
         if (!isAvailable) return null
         return nativePanicMac(panicKey, salt)
+    }
+
+    /**
+     * Smoke-test native KDF after [System.loadLibrary].
+     * Returns false on any link/runtime failure so callers can fall back.
+     */
+    fun selfTest(): Boolean {
+        if (!isAvailable) return false
+        return try {
+            val pin = "847291".toCharArray()
+            val salt = ByteArray(16) { it.toByte() }
+            val pepper = ByteArray(32) { (it * 3).toByte() }
+            try {
+                val kek = deriveKek(pin, salt, pepper, mKib = DEFAULT_M_KIB, t = DEFAULT_T, p = DEFAULT_P)
+                    ?: return false
+                val ok = kek.size == 32
+                kek.fill(0)
+                ok
+            } finally {
+                pin.fill('\u0000')
+                salt.fill(0)
+                pepper.fill(0)
+            }
+        } catch (_: Throwable) {
+            false
+        }
     }
 }
