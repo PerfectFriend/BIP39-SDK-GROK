@@ -73,7 +73,7 @@
 
 | Category | Threat | Mitigation in engine | Host still responsible |
 |----------|--------|----------------------|------------------------|
-| **S**poofing | Fake biometric callback | CryptoObject + Keystore gate | Use `FragmentActivity`; no custom biometric UI that skips CryptoObject |
+| **S**poofing | Impersonation of unlock UI | PIN-only unlock; no biometric factor | Host must not add custom bio bypass |
 | **T**ampering | Altered ciphertext / prefs | AEAD (Tink + AES-GCM); PIN KDF | Backup exclusions; no root debugging of process memory |
 | **R**epudiation | User denies action | Optional `OnboardingHost.onAnalyticsEvent` (no secrets) | Persist audit logs off-device if legally required |
 | **I**nformation disclosure | Screenshots, clipboard, logs | FLAG_SECURE, clipboard clear, CharArray, no seed logs | Never send seed to crash/analytics; train users offline |
@@ -91,4 +91,22 @@
 
 - Play Integrity / server attestation (host)  
 - Physical coercion beyond panic PIN / decoy (future)  
-- Supply-chain of host app signing  
+- Supply-chain of host app signing
+
+
+## Product policy: PIN-only unlock (2026-11-20)
+
+- Biometric unlock is **disabled** and must not be re-enabled for ParanoidX / sovereign hosts.
+- `Bip39Features.enableBiometricUnlock` always reads as `false`; setters are ignored.
+- `BiometricPinCache` and `BiometricHelper` are deprecated no-ops (clear any legacy prefs on wipe).
+- Unlock factor: **PIN** (+ optional panic PIN). Device pepper binds vault to Keystore, not biometrics.
+
+## Known residual risks (pre-vault-v1)
+
+Until [VAULT_FORMAT.md](VAULT_FORMAT.md) is implemented and legacy data migrated:
+
+1. **PIN-derived key stored as verifier** next to ciphertext (audit P0-1). Device Keystore/Tink still required for at-rest protection; PIN is not an independent offline factor against a full disk image + process compromise.
+2. **Biometrics** are **not used** (product policy 2026-11-20). Unlock is PIN-only; `BiometricPinCache` / `BiometricHelper` are no-ops.
+3. **JVM memory**: `CharArray` clearing is best-effort; secrets may remain in heap (audit P0-5).
+
+Track closure in [AUDIT_EXECUTION.md](AUDIT_EXECUTION.md).
