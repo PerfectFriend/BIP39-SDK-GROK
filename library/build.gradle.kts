@@ -12,7 +12,7 @@ android {
     defaultConfig {
         minSdk = 26
         targetSdk = 35
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "androidx.test.androidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -41,7 +41,7 @@ android {
 }
 
 group = "com.github.PerfectFriend"
-version = "2.0.0-alpha2"
+version = "2.1.0"
 
 afterEvaluate {
     publishing {
@@ -54,8 +54,8 @@ afterEvaluate {
 
                 pom {
                     name.set("BIP39 Onboarding Android")
-                    description.set("Drop-in BIP39 onboarding engine for Android: create/restore, PIN, panic PIN, passphrase, biometrics, Tink storage")
-                    url.set("https://github.com/PerfectFriend/bip39-onboarding-android")
+                    description.set("Drop-in BIP39 onboarding engine for Android: create/restore, PIN, panic PIN, passphrase, biometrics, vault v1")
+                    url.set("https://github.com/PerfectFriend/BIP39-SDK-GROK")
                     licenses {
                         license {
                             name.set("MIT License")
@@ -69,9 +69,9 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection.set("scm:git:git://github.com/PerfectFriend/bip39-onboarding-android.git")
-                        developerConnection.set("scm:git:ssh://github.com/PerfectFriend/bip39-onboarding-android.git")
-                        url.set("https://github.com/PerfectFriend/bip39-onboarding-android")
+                        connection.set("scm:git:git://github.com/PerfectFriend/BIP39-SDK-GROK.git")
+                        developerConnection.set("scm:git:ssh://github.com/PerfectFriend/BIP39-SDK-GROK.git")
+                        url.set("https://github.com/PerfectFriend/BIP39-SDK-GROK")
                     }
                 }
             }
@@ -80,6 +80,7 @@ afterEvaluate {
 }
 
 dependencies {
+    api(project(":keyboard"))
     implementation("cash.z.ecc.android:kotlin-bip39:1.0.9")
     implementation("androidx.security:security-crypto:1.1.0-alpha07")
 
