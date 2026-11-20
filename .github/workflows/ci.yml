@@ -7,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  build:
+  android-unit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,3 +29,80 @@ jobs:
 
       - name: Assemble sample (debug)
         run: ./gradlew :sample:assembleDebug --stacktrace
+
+  rust-host:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust -> target
+
+      - name: Format check
+        working-directory: rust
+        run: cargo fmt --all -- --check
+
+      - name: Clippy
+        working-directory: rust
+        run: cargo clippy -p bip39-engine -p bip39-engine-ffi --features android-jni -- -D warnings
+
+      - name: Unit tests (bip39-engine + kdf)
+        working-directory: rust
+        run: cargo test -p bip39-engine --all-features -- --nocapture
+
+      - name: Build ffi (host, android-jni feature)
+        working-directory: rust
+        run: cargo build -p bip39-engine-ffi --release --features android-jni
+
+  rust-android-ndk:
+    runs-on: ubuntu-latest
+    needs: rust-host
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust -> target
+
+      - name: Setup Android NDK
+        uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r28b
+          link-to-sdk: true
+
+      - name: Install cargo-ndk
+        run: cargo install cargo-ndk --locked
+
+      - name: Build Android .so (16KB page size)
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          CARGO_NDK_MAJOR_VERSION: "28"
+          RUSTFLAGS: "-C link-arg=-Wl,-z,max-page-size=16384"
+        run: |
+          chmod +x scripts/build-rust-android.sh
+          ./scripts/build-rust-android.sh
+
+      - name: List jniLibs
+        run: find library/src/main/jniLibs -type f -name '*.so' -printf '%p %s\n' | sort
+
+      - name: Upload jniLibs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bip39-engine-ffi-jniLibs
+          path: library/src/main/jniLibs/**
+          if-no-files-found: error
+          retention-days: 14
